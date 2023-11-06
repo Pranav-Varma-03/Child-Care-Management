@@ -19,7 +19,7 @@ const Login = () =>{
     },[])
 
     const handleSubmit = (e) =>{
-        
+
         e.preventDefault();
 
         const getData = async()=>{
@@ -27,22 +27,48 @@ const Login = () =>{
                 await axios.get(`http://localhost:3002/auth`,{
                     params: {
                         role: role,
-                        emailid: emailid,
+                        email: emailid,
                         password: password
                     }
                 }).then(res =>{
-                    console.log(res.data);
-                    console.log(res.data[0].valid );
+                    
+
+                    console.log(res.data[0].valid);
+
                     if(res.data[0].valid){
-                        // Cookies.set('User',parseInt(id));
-                        navigate('/home');
-                        Cookies.set('User',1);
+                
+                        //  
+                        // navigate('/home');
+
+                        Cookies.set('email',emailid);
                         Cookies.set('role',role);
+
+                        if(role === "System"){
+                            
+                            navigate('/systemadmin');
+                            
+                        }else if(role === "Facility"){
+                            navigate('/facilityadmin/' + res.data[0].id);
+                        }else if(role === "Teacher"){
+                            navigate('/systemadmin/' + res.data[0].id);
+                        }else if(role === "Parent"){
+                            navigate('/parent/' + res.data[0].id);
+                        }
+
                     }else{
                         alert('Incorrect Credentials, Please Retry');
                     }
                
             })
+
+            // if(emailid == "krishna323@gmail.com" && password == "123"){
+            //     navigate('/home');
+            //             Cookies.set('User',1);
+            //             Cookies.set('role',role);
+            // }else{
+            //                 alert('Incorrect Credentials, Please Retry');
+            // }
+            
             } catch (error) {
                 
             }

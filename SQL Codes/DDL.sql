@@ -1,17 +1,17 @@
--- CREATE DATABASE CMS; 
-
+CREATE DATABASE CMS; 
+-- DROP DATABASE CMS;
 use CMS;
 
 CREATE TABLE SystemAdmin (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255)
 );
+
 CREATE TABLE FacilityAdmin (
-    facility_id INT AUTO_INCREMENT PRIMARY KEY,
+    facility_id INT UNIQUE AUTO_INCREMENT,
     name VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255),
     license_number INT
 );
@@ -23,8 +23,8 @@ CREATE TABLE Facility (
     FOREIGN KEY (facility_admin) REFERENCES FacilityAdmin(facility_id)
 );
 CREATE TABLE Teacher (
-    teacher_id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255),
+    teacher_id INT UNIQUE AUTO_INCREMENT,
+    email VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255),
     name VARCHAR(255),
     dob DATE,
@@ -35,9 +35,9 @@ CREATE TABLE Teacher (
     FOREIGN KEY (license_number) REFERENCES Facility(license_number)
 );
 CREATE TABLE Parent (
-    parent_id INT AUTO_INCREMENT PRIMARY KEY,
+    parent_id INT UNIQUE AUTO_INCREMENT,
     name VARCHAR(255),
-    email VARCHAR(255),
+    email VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255),
     ph_number VARCHAR(15),
     address VARCHAR(255)
