@@ -11,25 +11,55 @@ const Teacher = () =>{
     const [data,setData] = useState([]);
     const [list1,setlist1] = useState([]);
     const [list2,setlist2] = useState([]);
+    const [license,setlicense] = useState('');
     const [list3,setlist3] = useState([]);
+    const [activeButton, setActiveButton] = useState("");
+    const [child_id,setChildid] = useState('');
     let counter_present = 0;
     const ck_license = Cookies.get('license');
+    const ck_week = Cookies.get('week');
+    const ck_day = Cookies.get('day');
+    console.log(ck_week,ck_day,ck_license);
     useEffect(() => {
         M.AutoInit();
       }, []);
 
+      useEffect(()=>{
+        Cookies.set('license', license);
+    },[license])
+
+
       useEffect(() => {
+
+        const Date = async()=>{
+            try{
+
+                axios.get(`http://localhost:3002/dayweek`,{
+                }).then(res =>{
+                    // alert("Date - Set Successfully.");
+                    Cookies.set('week',parseInt(res.data[0].week));
+                    Cookies.set('day',parseInt(res.data[0].day));
+                    // window.location.reload();
+                })
+
+            }catch(error){
+                console.error(error)
+            }
+        }
+
+        Date();
 
         const fetchData = async() =>{
             try{
     
             await axios.get(`http://localhost:3002/teacher`,{
                 params:{
-                    teacher_id: teacher_id,
-                    license: ck_license
+                    teacher_id: teacher_id
                 }
             }).then(res =>{
                 setData(res.data)
+                // console.log(res.data);
+                setlicense(res.data[0].license_number);
             })
             }catch(error){
                 console.error('Error fetching data:', error);
@@ -165,6 +195,46 @@ const Teacher = () =>{
         counter_present++;
     }
 
+    const handleButtonClick = (e) => {
+        e.preventDefault();
+        // setActiveButton(buttonName);
+    
+    
+        const markAttendance = async()=>{
+            try{
+                
+                // if()
+    
+                // console.log(parentemail,childname,dob,consent,ck_license);
+                console.log({activeButton}.activeButton)
+                axios.post(`http://localhost:3002/child/attendance`,{
+                    time: {activeButton},
+                    childid: child_id,
+                    week: ck_week,
+                    day: ck_day,
+                    teacher_id: teacher_id
+                }).then(res =>{
+                    
+                    if(res.data[0].val === 1){
+                        alert("Attendance In Sign Marked");
+                    }else if(res.data[0].val === 2){
+                        alert("Already Marked Attendance");
+                    }else if(res.data[0].val === 3){
+                        alert("You cannot give attendance to this child");
+                    }else{
+                        alert("Error, Please re-try!");
+                    }
+                    // window.location.reload();
+                })
+    
+            }catch(error){
+                console.error(error)
+            }
+        }
+    
+        markAttendance();
+      };
+
     return(
         <div className="container">
         
@@ -232,6 +302,42 @@ const Teacher = () =>{
             </ul>
         </div>
     </li>
+        
+    <li>
+        <div className="collapsible-header">
+        Child Attendance
+        </div>
+        <div className="collapsible-body">
+        <form className="col s12" onSubmit={handleButtonClick}>
+            <div className="row">
+            <div className="input-field col s12">
+            <textarea id="textarea1" className="materialize-textarea" onChange={(e) => {setChildid(e.target.value)}}></textarea>
+            <label htmlFor="textarea1">child Id</label>
+            </div>
+
+            <p>
+                <label>
+                <input
+                    className="with-gap"
+                    type="radio"
+                    name="group1"
+                    value="PRESENT"
+                    checked={activeButton === "PRESENT"}
+                    onChange={() => setActiveButton("PRESENT")}
+                />
+                <span> INTIME </span>
+                
+                </label>
+            </p>
+            {/* <p>Active Button: {activeButton}</p> */}
+
+            <button className="center"> Mark Attendance</button>
+        </div>
+       
+        </form>
+        </div>
+    </li>
+
     </ul>
 
     </div>

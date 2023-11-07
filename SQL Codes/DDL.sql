@@ -24,7 +24,7 @@ CREATE TABLE Facility (
 );
 CREATE TABLE Teacher (
     teacher_id INT UNIQUE AUTO_INCREMENT,
-    email VARCHAR(255) PRIMARY KEY,
+    email VARCHAR(255),
     password VARCHAR(255),
     name VARCHAR(255),
     dob DATE,
@@ -32,6 +32,7 @@ CREATE TABLE Teacher (
     phone_number VARCHAR(15),
     hour_salary DECIMAL(10, 2),
     license_number INT,
+    PRIMARY KEY (email, license_number),
     FOREIGN KEY (license_number) REFERENCES Facility(license_number)
 );
 CREATE TABLE Parent (
@@ -48,14 +49,16 @@ CREATE TABLE Child (
     dob DATE,
     allergies VARCHAR(255),
     parent_id INT,
-    consent_Form INT,
+    consent_Form BOOL,
     license_number INT,
+    type VARCHAR(255),
     FOREIGN KEY (parent_id) REFERENCES Parent(parent_id),
     FOREIGN KEY (license_number) REFERENCES Facility(license_number)
 );
 CREATE TABLE Classroom (
     class_id INT AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(255),
+    capacity INT,
     license_number INT,
     FOREIGN KEY (license_number) REFERENCES Facility(license_number)
 );
