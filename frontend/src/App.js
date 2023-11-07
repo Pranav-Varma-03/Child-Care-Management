@@ -13,6 +13,7 @@ import TeacherAttendance from './Components/Attendance/TeacherAttendance';
 import LedgerData from './Components/Ledger/LedgerData';
 import Reports from './Components/Report/Report';
 import ClassAttendance from './Components/Attendance/ClassAttendance';
+import Child from './Components/Child/Child';
 
 
 class App extends Component {
@@ -42,6 +43,9 @@ class App extends Component {
             </Route>
             <Route path='/attendance'>
               <Route path=':class_id' element={<ClassAttendance/>} />
+            </Route>
+            <Route path='/child'>
+              <Route path=':child_id' element={<Child/>} />
             </Route>
 
             <Route path='/enrollchild' element={<EnrollChild/>} />

@@ -111,26 +111,26 @@ const Reports = () =>{
         counter++;
     },[])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        // console.log(c_id)
+    //     // console.log(c_id)
 
-        const feeHtml = class_ids.map(cls =>{
-            return(
-                <li className="collection-item" key={cls.child_id} >
-                    <div className="row">
-                        <div className="col s6">
-                            <span className="title">Class Id: {cls.child_id}</span>
-                        </div>
-                    </div>
-                </li>
-            )
-        })
+    //     const feeHtml = class_ids.map(cls =>{
+    //         return(
+    //             <li className="collection-item" key={cls.child_id} >
+    //                 <div className="row">
+    //                     <div className="col s6">
+    //                         <span className="title">Class Id: {cls.child_id}</span>
+    //                     </div>
+    //                 </div>
+    //             </li>
+    //         )
+    //     })
 
-        setList(feeHtml);
-        console.log(list)
+    //     setList(feeHtml);
+    //     console.log(list)
 
-    },[counter])
+    // },[counter])
 
     return(
     <div className="container">

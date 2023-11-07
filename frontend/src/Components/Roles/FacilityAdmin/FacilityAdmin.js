@@ -72,8 +72,7 @@ const FacilityAdmin = () =>{
             <button className="center"> Set Date </button>
         </form>
   
-
-            <div className="container">
+        <div className="container">
             <h5 className="center">Details</h5>
             <ul className="collection">
             <li className="collection-item" style={{ fontSize: '0.7rem'}}>
@@ -87,6 +86,7 @@ const FacilityAdmin = () =>{
             </li>
             </ul>
         </div>
+            
 
         <div className="container">
             <h5 className="center">Duties:</h5>

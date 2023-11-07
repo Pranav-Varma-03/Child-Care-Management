@@ -10,7 +10,7 @@ const Login = () =>{
      
     const [emailid,setemailid] = useState('');
     const [password,setPassword] = useState('');
-    const [role,setRole] = useState('');
+    const [role,setRole] = useState('Roles');
 
     // const [valid,setValid] = useState(10);
 
@@ -43,6 +43,8 @@ const Login = () =>{
                         Cookies.set('email',emailid);
                         Cookies.set('role',role);
 
+                        console.log(role)
+
                         if(role === "System"){
                             
                             navigate('/systemadmin');
@@ -50,7 +52,7 @@ const Login = () =>{
                         }else if(role === "Facility"){
                             navigate('/facilityadmin/' + res.data[0].id);
                         }else if(role === "Teacher"){
-                            navigate('/systemadmin/' + res.data[0].id);
+                            navigate('/teacher/' + res.data[0].id);
                         }else if(role === "Parent"){
                             navigate('/parent/' + res.data[0].id);
                         }
@@ -95,7 +97,7 @@ const Login = () =>{
                         <li><a id="Teacher" onClick={(e) => {setRole(e.target.id)}}>Teacher</a></li>
                         <li><a id="Parent" onClick={(e) => {setRole(e.target.id)}}>Parent</a></li>
                     </ul>
-                    <a className="btn dropdown-trigger" href="#!" data-target="dropdown2">Roles ⇩</a>
+                    <a className="btn dropdown-trigger" href="#!" data-target="dropdown2">{role}</a>
 
                     <div className="row">
                         <form className="col s12" onSubmit={handleSubmit}>

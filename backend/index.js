@@ -269,7 +269,7 @@ app.get('/ledger/collect',async(req,res) =>{
 
         const [rows] = await pool.promise().query(query,[license]);
         res.json(rows);
-        console.log(rows);
+        // console.log(rows);
     } catch (error) {
         console.error(error)
     }
@@ -409,7 +409,7 @@ app.get('/attendance/present',async(req,res) =>{
     }
 })
 
-app.get('/attendance/absent',async(req,res) =>{
+app.get('/attendance/absent',async(req,res) => {
     try {
         const {license,class_id,week,day} = req.query;
         const query = `SELECT cc.child_id, c.name AS child_name
@@ -428,6 +428,203 @@ app.get('/attendance/absent',async(req,res) =>{
         const [rows] = await pool.promise().query(query,[license,class_id,day,week]);
         res.json(rows);
         // console.log(rows);
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.post('/teacher/attendance',async(req,res) =>{
+    try {
+        const {time,email,week,day} = req.body;
+
+        let query = "SELECT NOW() as time;"
+        const [curr_time] = await pool.promise().query(query);
+
+        query = 'SELECT teacher_id FROM Teacher WHERE email = ?;';
+        const [teacher] = await pool.promise().query(query,[email]);
+
+        console.log(time);
+
+        const teacherId = teacher[0].teacher_id;
+        const currentTime = curr_time[0].time;
+
+        if(time.activeButton == 'INTIME'){
+
+            console.log('entered if block');
+
+        query = 'INSERT INTO Attendance ' +
+        '(week_number, day_number, teacher_id, in_time, out_time, child_id) ' +
+        'VALUES (?, ?, ?, ?, ?, NULL);';
+
+        await pool.promise().query(query,[week,day,teacherId,currentTime,currentTime]);
+        res.json([{val:1}]); //inserted. - in Time.
+        }else{
+
+            query = 'UPDATE Attendance '+
+            'SET out_time = ? ' +
+            'WHERE week_number = ? ' +
+            'AND day_number = ? ' +
+            'AND teacher_id = ?;';
+            
+        await pool.promise().query(query,[currentTime,week,day,teacherId]);
+        res.json([{val:2}]); //Out Time.
+        }      
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+
+app.get('/teacher',async(req,res) =>{
+    try {
+        
+        const {teacher_id,license} = req.query;
+        const query = `SELECT * FROM Teacher WHERE teacher_id = ? AND license_number = ?`;
+
+        const [rows] = await pool.promise().query(query,[teacher_id,license]);
+
+        res.json(rows);
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.get('/attendance/teacher',async(req,res) => {
+    try {
+        const {license,teacher_id,week} = req.query;
+        const query = `SELECT day_number, TIME(a.in_time) AS in_time, TIME(a.out_time) AS out_time
+        FROM Attendance AS a
+        INNER JOIN Teacher AS t ON a.teacher_id = t.teacher_id
+        WHERE t.license_number = ?
+        AND a.teacher_id = ?
+        AND a.week_number = ?;        
+        `;
+        const [rows] = await pool.promise().query(query,[license,teacher_id,week]);
+        res.json(rows);
+        // console.log(rows);
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.get('/salary/teacher',async(req,res) => {
+    try {
+        const {license,teacher_id,week} = req.query;
+        const query = `SELECT a.day_number,
+        SUM((TIME_TO_SEC(TIMEDIFF(a.out_time, a.in_time)) / 3600) * t.hour_salary) AS daily_salary
+ FROM Attendance AS a
+ INNER JOIN Teacher AS t ON a.teacher_id = t.teacher_id
+ WHERE t.license_number = ?
+ AND a.teacher_id = ?
+ AND a.week_number = ?
+ GROUP BY a.day_number;
+         
+        `;
+        const [rows] = await pool.promise().query(query,[license,teacher_id,week]);
+        res.json(rows);
+        // console.log(rows);
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.get('/hours/teacher',async(req,res) => {
+    try {
+        const {license,teacher_id,week} = req.query;
+        const query = `SELECT a.day_number,
+        ROUND(SUM(TIME_TO_SEC(TIMEDIFF(a.out_time, a.in_time)) / 3600), 2) AS daily_working_hours
+ FROM Attendance AS a
+ INNER JOIN Teacher AS t ON a.teacher_id = t.teacher_id
+ WHERE t.license_number = ?
+ AND a.teacher_id = ?
+ AND a.week_number = ?
+ GROUP BY a.day_number;
+        `;
+        const [rows] = await pool.promise().query(query,[license,teacher_id,week]);
+        res.json(rows);
+        // console.log(rows);
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.get('/parent',async(req,res) =>{
+    try {
+        
+        const {parent_id} = req.query;
+        const query = `SELECT * FROM Parent WHERE parent_id = ? `;
+
+        const [rows] = await pool.promise().query(query,[parent_id]);
+
+        res.json(rows);
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.get('/parent/children',async(req,res) =>{
+    try {
+        
+        const {parent_id} = req.query;
+        const query = `SELECT c.child_id, c.name AS child_name, c.license_number
+        FROM Child AS c
+        WHERE c.parent_id = ?;`;
+
+        const [rows] = await pool.promise().query(query,[parent_id]);
+
+        res.json(rows);
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.get('/payment/child',async(req,res) =>{
+    try {
+        
+        const {child_id} = req.query;
+        const query = `SELECT week_number
+        FROM Ledger
+        WHERE child_id = ?
+        AND payment_status = 0;
+        `;
+
+        const [rows] = await pool.promise().query(query,[child_id]);
+
+        res.json(rows);
+        // console.log(child_id);
+        // console.log(rows);
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.post('/payment/confirm',async(req,res) =>{
+    try {
+        const {child_id,week} = req.body;
+        
+
+        let query = `UPDATE Ledger
+        SET payment_status = 1
+        WHERE child_id = ?
+        AND week_number = ?;`
+        ;
+
+        const [rows] = await pool.promise().query(query,[child_id,week]);
+
+        if(rows != null && rows.length !== 0){
+            
+            // query = 'DELETE FROM Attendance WHERE child_id = ?;';
+            // await pool.promise().query(query,[childid]); 
+            //REQUEST TO DELETE OTHER TABLE DATA REL. TO TEACHER.   
+        res.json([{val: 1}]);
+        }else{
+            res.json([{val: 0}]);
+        }        
+
     } catch (error) {
         console.error(error)
     }
