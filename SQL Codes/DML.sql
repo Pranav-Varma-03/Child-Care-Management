@@ -167,6 +167,9 @@ SELECT * FROM ClassTeacher;
 -- Retrieve all values from the ClassChild table
 SELECT * FROM ClassChild;
 
+-- DROP table ClassTeacher;
+
+
 -- Retrieve all values from the Attendance table
 SELECT * FROM Attendance;
 
@@ -175,10 +178,12 @@ SELECT * FROM Fees;
 
 -- Retrieve all values from the Ledger table
 SELECT * FROM Ledger;
-
+SELECT * FROM SystemAdmin;
 -- System Admin
 INSERT INTO SystemAdmin (name, email, password)
-VALUES ('System Admin', 'SA1@cms.in', '123');
+VALUES ('System Admin', 'admin@cms.in', 'admin');
+
+-- DROP TABLE SystemAdmin;
 
 -- Facility Admin
 INSERT INTO FacilityAdmin (facility_id, name, email, password, license_number)
@@ -209,14 +214,13 @@ VALUES ('infant', 1, 8);
 
 -- ClassChild
 INSERT INTO ClassChild (class_id, child_id)
-VALUES (1, 1);
+VALUES (1, 3);
 
 -- Attendance
 INSERT INTO Attendance (week_number, day_number, in_time, out_time, teacher_id, child_id)
-VALUES
-(45, 1, '2023-11-05 08:30:00', '2023-11-05 16:00:00', NULL, 1),
-(45, 2, '2023-11-06 11:17:51', '2023-11-06 22:58:24', 1, NULL),
-(45, 2, '2023-11-06 22:58:19', '2023-11-06 22:58:24', 1, NULL);
+VALUES (45, 3, '2023-11-05 08:30:00', '2023-11-05 16:00:00', NULL, 1);
+-- (45, 2, '2023-11-06 11:17:51', '2023-11-06 22:58:24', 1, NULL),
+-- (45, 2, '2023-11-06 22:58:19', '2023-11-06 22:58:24', 1, NULL);
 
 -- Fee
 INSERT INTO Fees (type, fee_per_week)
@@ -231,4 +235,65 @@ VALUES
 INSERT INTO Ledger (child_id, confirm_status, payment_status, week_number, license_number)
 VALUES (1, '0', '0', 45, 1);
 
+SELECT
+    DATE_FORMAT(in_time, '%Y-%m') AS month,
+    COUNT(*) AS count
+FROM Attendance
+WHERE teacher_id = 1
+GROUP BY teacher_id, month
+ORDER BY teacher_id, month;
 
+SELECT
+    CASE
+        WHEN c.type = cl.type THEN 1
+        ELSE 0
+    END AS type_match
+FROM Child AS c
+INNER JOIN Classroom AS cl ON c.child_id = 2 AND cl.class_id = 2;
+
+DELETE FROM ClassTeacher
+WHERE teacher_id = 2
+AND EXISTS (SELECT 1 FROM ClassTeacher WHERE teacher_id = 2);
+
+
+SELECT * FROM Teacher WHERE email = 'TA2@cms.in' AND license_number = 1;
+
+SELECT COUNT(*) AS row_count
+        FROM ClassTeacher AS ct
+        JOIN ClassChild AS cc ON ct.class_id = cc.class_id
+        WHERE cc.child_id = 3
+        AND ct.teacher_id = 1;
+        
+        
+        
+SELECT *
+FROM Classroom AS c
+INNER JOIN ClassChild AS cc ON c.class_id = cc.class_id
+WHERE c.license_number = 1
+;
+        
+        select * from Attendance;
+        Select * from Child;
+        Select * from ClassChild;
+		SELECT * FROM Classroom;
+        SELECT * FROM Ledger;
+        
+        SELECT
+    CH.child_id,
+    CH.name AS child_name,
+    CH.dob AS child_dob,
+    CH.allergies,
+    CH.parent_id,
+    CH.consent_Form,
+    CH.license_number AS Ch_license,
+    CH.type AS child_type,
+    CC.class_id,
+    CR.license_number AS Cr_license,
+    CR.type AS class_type,
+    CR.capacity AS class_capacity
+FROM
+    Child AS CH
+JOIN
+    ClassChild AS CC ON CH.child_id = CC.child_id
+JOIN
+    Classroom AS CR ON CC.class_id = CR.class_id;

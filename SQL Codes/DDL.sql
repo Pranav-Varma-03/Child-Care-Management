@@ -19,7 +19,7 @@ CREATE TABLE Facility (
     license_number INT PRIMARY KEY,
     name VARCHAR(255),
     address VARCHAR(255),
-    facility_admin INT,
+    facility_admin INT UNIQUE,
     FOREIGN KEY (facility_admin) REFERENCES FacilityAdmin(facility_id)
 );
 CREATE TABLE Teacher (

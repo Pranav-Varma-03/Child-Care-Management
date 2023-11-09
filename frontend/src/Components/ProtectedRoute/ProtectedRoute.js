@@ -5,7 +5,7 @@ import {Navigate,Outlet} from "react-router";
 
 const ProtectedRoute = () =>{
 
-    const ecookie = Cookies.get('email');
+    const ecookie = Cookies.get('role');
 
     if(ecookie){
         return(

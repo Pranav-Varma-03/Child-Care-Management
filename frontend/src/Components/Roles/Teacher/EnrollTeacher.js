@@ -29,7 +29,7 @@ const EnrollTeacher = () => {
 
         const addParent = async () => {
             try {
-                axios.post(`http://localhost:3002/parent/add`, {
+                axios.post(`http://localhost:3002/teacher/add`, {
                     email: teacheremail,
                     name: name,
                     password: password,
@@ -40,8 +40,8 @@ const EnrollTeacher = () => {
                     license: ck_license
 
                 }).then(res => {
-                    alert("Parent Added Successfully!");
-                    // window.location.reload();
+                    alert("Teacher Added Successfully!");
+                    window.location.reload();
                 })
 
             } catch (error) {
@@ -61,12 +61,15 @@ const EnrollTeacher = () => {
 
                 alert("Please Confirm your Decision.");
 
+                console.log("entered delete teacher");
+
                 axios.post(`http://localhost:3002/teacher/delete`, {
                     email: teacheremail,
                     license: ck_license
 
                 }).then(res => {
-                    if (res[0].val === 1) {
+                    if (res.data[0].val === 1) {
+                        console.log("entered delete teacher succ");
                         alert("Teacher Terminated Successfully!");
                     } else {
                         alert("Unsuccessful attempt, Please Re-try.");
@@ -97,12 +100,14 @@ const EnrollTeacher = () => {
                     license: ck_license,
                     teacheremail: teacheremail
 
+                    
+
                 }).then(res => {
-                    if (res[0].val === 1) {
+                    console.log(res.data)
+                    if (res.data[0].val === 1) {
                         alert("Teacher Assigned, Successfully!");
-                    } else if (res[0].val === 0) {
-                        alert("Class Not Found.");
-                    } else {
+                    }
+                    else {
                         alert("Max of Teachers required for given class is Full.");
                     }
                     // window.location.reload();
@@ -191,7 +196,7 @@ const EnrollTeacher = () => {
                                 </div>
                                 <div className="input-field col s12">
                                     <textarea id="textarea1" className="materialize-textarea" onChange={(e) => { setTeacheremail(e.target.value) }}></textarea>
-                                    <label htmlFor="textarea1">Teacher ID</label>
+                                    <label htmlFor="textarea1">Teacher Email ID</label>
                                 </div>
                                 <button className="col s2"> Assign</button>
                             </div>

@@ -17,28 +17,31 @@ const FacilityAdmin = () =>{
     useEffect(()=>{
         ck_email = Cookies.get('email');    
         Cookies.set('license', license);
-        console.log(Cookies.get('license'));
+        // console.log(Cookies.get('license'));
     },[license])
 
     useEffect(()=>{
         const fetchData = async() =>{
             try{
-    
+                console.log("fetch fac adm")
             await axios.get(`http://localhost:3002/facilityadmin`,{
                 params:{
                     email: ck_email,
                     facility_id: facility_id
                 }
             }).then(res =>{
-                setData(res.data)
+                setData(res.data);
+                console.log("license sett");
+                // Cookies.set('license', res.data[0].license_number);
                 setlicense(res.data[0].license_number);
+                console.log(license);
             })
             }catch(error){
                 console.error('Error fetching data:', error);
             }
         }
         fetchData();
-    },[facility_id,ck_email])
+    },[])
 
     const handleDate = (e) => {
         e.preventDefault();

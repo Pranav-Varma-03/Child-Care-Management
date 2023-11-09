@@ -30,12 +30,16 @@ const Navbar = () =>{
     //   }, [ecookie]);
 
     // const hrefLink = "/" + role + "/" + parseInt(ecookie);
-    const hrefLink = "/home" ;
+    const hrefLink = "/login" ;
     
     const handleclick = (e) =>{
         e.preventDefault();
         
-        Cookies.remove('User')
+        Cookies.remove('license')
+        Cookies.remove('role')
+        Cookies.remove('email')
+        Cookies.remove('day')
+        Cookies.remove('week')
         //protected route.
         navigate('/login');
     }

@@ -110,7 +110,12 @@ const Login = () => {
 
                             <div className="row">
                                 <div className="input-field col s12">
-                                    <textarea id="textarea1" className="materialize-textarea" onChange={(e) => { setPassword(e.target.value) }}></textarea>
+                                    {/* <textarea id="textarea1" className="materialize-textarea" onChange={(e) => { setPassword(e.target.value) }}></textarea> */}
+                                    <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => { setPassword(e.target.value) }}
+                                    />
                                     <label htmlFor="textarea1">Password</label>
                                 </div>
                             </div>

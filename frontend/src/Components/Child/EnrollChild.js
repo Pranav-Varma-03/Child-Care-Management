@@ -85,7 +85,7 @@ const EnrollChild = () => {
                         <li className="collection-item" key={child.child_id} >
                             <div className="row">
                                 <div className="col s6">
-                                    <span className="title">Class Id: {child.child_id}</span>
+                                    <span className="title">Child Id: {child.child_id}</span>
                                 </div>
                                 <div className="s6">
                                     <span className="title">Name: {child.name}</span>
@@ -156,7 +156,7 @@ const EnrollChild = () => {
                     child_id: childid
 
                 }).then(res => {
-                    if (res[0].val === 1) {
+                    if (res.data[0].val === 1) {
                         alert("Assigned, Successfully!");
                     } else {
                         alert("Class type mismatch.");
@@ -194,7 +194,7 @@ const EnrollChild = () => {
                     } else {
                         alert("Invalid Parent ID, Please Re-try.");
                     }
-                    // window.location.reload();
+                    window.location.reload();
                 })
 
             } catch (error) {
@@ -253,7 +253,7 @@ const EnrollChild = () => {
                     } else {
                         alert("Invalid Parent ID, Please Re-try.");
                     }
-                    // window.location.reload();
+                    window.location.reload();
                 })
 
             } catch (error) {

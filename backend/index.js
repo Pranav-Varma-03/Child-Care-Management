@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const mysql = require('mysql2')
+const e = require('express')
 // const pool = require('./conf')
 
 const app = express()
@@ -56,11 +57,11 @@ app.get('/auth', async (req, res) => {
             // Create a new object by merging rows and { valid: true }
             const responseObject = [{ ...rows[0], valid: true }];
 
-            console.log(responseObject);
-            console.log(rows);
+            // console.log(responseObject);
+            // console.log(rows);
             res.json(responseObject);
-            console.log(responseObject)
-            console.log(rows[0].password);
+            // console.log(responseObject)
+            // console.log(rows[0].password);
             // res.send(1);
         } else {
             res.json([{ valid: false }])
@@ -74,6 +75,43 @@ app.get('/auth', async (req, res) => {
     }
 })
 
+app.post('/facilityadmin/add', async (req, res) => {
+    try {
+        const { FAname, email, password, license} = req.body;
+
+        const query = `INSERT INTO FacilityAdmin (name, email, password, license_number)
+        VALUES (?, ?, ?,?);
+        `;
+
+        const [rows] = await pool.promise().query(query, [FAname, email, password, license]);
+
+        res.json([{val: 1}]);
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+app.post('/facility/add', async (req, res) => {
+    try {
+        const { Fname, addr, license} = req.body;
+
+        var query = `SELECT facility_id FROM FacilityAdmin WHERE license_number = ?;`;
+        var [rows] = await pool.promise().query(query, [license]);
+        console.log(rows);
+        const facility_id = rows[0].facility_id;
+
+        query = `INSERT INTO Facility (license_number, name, address, facility_admin)
+        VALUES (?,?, ?,?);
+        `;
+        [rows] = await pool.promise().query(query, [license,Fname,addr,facility_id]);
+        res.json([{val: 1}]);
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
 app.get('/facilityadmin', async (req, res) => {
     try {
 
@@ -83,7 +121,7 @@ app.get('/facilityadmin', async (req, res) => {
         const [rows] = await pool.promise().query(query, [email, parseInt(facility_id)]);
 
         res.json(rows);
-
+        console.log(rows);
     } catch (error) {
         console.error(error)
     }
@@ -150,13 +188,31 @@ app.post('/child/delete', async (req, res) => {
 
         let query;
 
-        query = `DELETE FROM Attendance WHERE child_id = ?;`;
-        await pool.promise().query(query, [childid]);
-        query = `DELETE FROM Ledger WHERE child_id = ?;`
-        await pool.promise().query(query, [childid]);
-        query = `DELETE FROM ClassChild WHERE child_id = ?;`
-        await pool.promise().query(query, [childid]);
+        query = `SELECT COUNT(*) AS count FROM Attendance WHERE child_id = ?;`;
 
+        let [rows] = await pool.promise().query(query, [childid]);
+        
+        if(rows[0].count !== 0){
+            query = `DELETE FROM Attendance WHERE child_id = ?;`;
+        await pool.promise().query(query, [childid]);
+        }
+
+        query = `SELECT COUNT(*) AS count FROM Ledger WHERE child_id = ?;`;
+        [rows] = await pool.promise().query(query, [childid]);
+
+        if(rows[0].count !== 0){
+            query = `DELETE FROM Ledger WHERE child_id = ?;`
+        await pool.promise().query(query, [childid]);
+        }
+
+        query = `SELECT COUNT(*) AS count FROM ClassChild WHERE child_id = ?;`;
+        [rows] = await pool.promise().query(query, [childid]);
+        
+        if(rows[0].count !== 0){
+            query = `DELETE FROM ClassChild WHERE child_id = ?;`
+            await pool.promise().query(query, [childid]);
+        }
+      
         query = 'DELETE FROM Child WHERE child_id = ?;';
         const [parent_id] = await pool.promise().query(query, [childid]);
 
@@ -176,29 +232,48 @@ app.post('/child/delete', async (req, res) => {
     }
 })
 
+app.post('/teacher/add', async (req, res) => {
+    try {
+        const { email, name, password,sal ,dob,ph, addr,license } = req.body;
 
+        const query = `INSERT INTO Teacher (email, password, name, dob, address, phone_number, hour_salary, license_number)
+        VALUES (?, ?, ?, ?, ?, ?,?, ?);`;
+        const [rows] = await pool.promise().query(query, [ email, password,name, dob, addr,ph,sal,license]);
+
+        res.json(rows);
+
+    } catch (error) {
+        console.error(error)
+    }
+})
 
 app.post('/teacher/delete', async (req, res) => {
     try {
         const { email, license } = req.body;
 
-
-        let query = 'SELECT teacher_id FROM Teacher WHERE email = ? AND license_number = ?;';
-        await pool.promise().query(query, [email, license]);
+        console.log("starrt");
+        let query = 'SELECT * FROM Teacher WHERE email = ? AND license_number = ?;';
+        let [rows] = await pool.promise().query(query, [email, license]);
         const teacher_id = rows[0].teacher_id;
 
-        query = `Delete from Attendance table
-        DELETE FROM Attendance WHERE teacher_id = ?;`
-        
-        await pool.promise().query(query, [teacher_id]);
-        query = `Delete from ClassTeacher table
-        DELETE FROM ClassTeacher WHERE teacher_id = ?;`
-        
-        await pool.promise().query(query, [teacher_id]);
+        query = `SELECT COUNT(*) AS count FROM Attendance WHERE teacher_id = ?;`;
+        [rows] = await pool.promise().query(query, [teacher_id]);
 
-        query = `Delete from Teacher table
-        DELETE FROM Teacher WHERE teacher_id = ?;`;
-        const [rows] = await pool.promise().query(query, [teacher_id]);
+        if(rows[0].count !== 0 ){
+            query = `DELETE FROM Attendance WHERE teacher_id = ?;`;
+            await pool.promise().query(query, [teacher_id]);
+        }
+        
+        query = `SELECT COUNT(*) AS count FROM ClassTeacher WHERE teacher_id = ?;`;
+        [rows] = await pool.promise().query(query, [teacher_id]);
+
+        if(rows[0].count !== 0 ){
+            query = `DELETE FROM ClassTeacher WHERE teacher_id = ?;`;
+            await pool.promise().query(query, [teacher_id]);
+        }
+    
+        query = `DELETE FROM Teacher WHERE teacher_id = ?;`;
+        [rows] = await pool.promise().query(query, [teacher_id,teacher_id]);
         
         if (rows != null && rows.length !== 0) {
 
@@ -215,6 +290,43 @@ app.post('/teacher/delete', async (req, res) => {
     }
 })
 
+
+app.post('/teacher/assign', async (req, res) => {
+    try {
+        const { class_id, license, teacheremail } = req.body;
+
+        var query = `SELECT teacher_id
+        FROM Teacher
+        WHERE email = ?;        
+        `;
+        var [rows] = await pool.promise().query(query, [teacheremail]);
+
+        const teacher_id = rows[0].teacher_id;
+
+        query = `SELECT COUNT(class_id) AS class_count
+        FROM ClassTeacher
+        WHERE teacher_id = ?;`;
+
+        [rows] = await pool.promise().query(query, [teacher_id]);
+
+        console.log(rows)
+
+        if(rows[0].class_count < 2){
+    
+            query = `INSERT INTO ClassTeacher (class_id, teacher_id)
+            VALUES (?, ?); `;
+            await pool.promise().query(query, [class_id,teacher_id]);
+            res.json([{ val: 1 }]); //count Success.
+        }else{
+            res.json([{val: -1}]); //count > 2. cannot add
+        }
+
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+
 app.post('/child/assign', async (req, res) => {
     try {
         const { class_id, child_id, license } = req.body;
@@ -225,21 +337,23 @@ app.post('/child/assign', async (req, res) => {
 
         query = `SELECT
         CASE
-            WHEN c.type = cc.type THEN 1
+            WHEN c.type = cl.type THEN 1
             ELSE 0
-        END AS match_result
+        END AS type_match
     FROM Child AS c
-    JOIN ClassChild AS cc ON c.child_id = cc.child_id
-    WHERE c.child_id = ? AND cc.class_id = ?;
+    INNER JOIN Classroom AS cl ON c.child_id = ? AND cl.class_id = ?;
     `;
 
-        const [rows] = await pool.promise().query(query, [child_id, class_id]);
+      
 
-        if (rows[0].match_result === 1) {
+        const [rows] = await pool.promise().query(query, [child_id, class_id]);
+        console.log(rows);  
+        if (rows[0].type_match === 1) {
 
             query = 'INSERT INTO ClassChild (class_id, child_id) VALUES (?, ?);';
 
             await pool.promise().query(query, [class_id, child_id]);
+            console.log(rows);
             res.json([{ val: 1 }]); //added Successfully.
 
         } else {
@@ -406,9 +520,7 @@ app.get('/billed', async (req, res) => {
         ) AS total_money
         FROM Classroom AS c
         INNER JOIN ClassChild AS cc ON c.class_id = cc.class_id
-        INNER JOIN Attendance AS a ON cc.child_id = a.child_id
         WHERE c.license_number = ?
-        AND a.week_number = ?;
         `;
 
         const [rows] = await pool.promise().query(query, [license, week]);
@@ -628,7 +740,9 @@ app.get('/hours/teacher', async (req, res) => {
 
 app.post('/child/attendance', async (req, res) => {
     try {
-        const { time, child_id, week, day, teacher_id } = req.body;
+        const { time, childid, week, day, teacher_id } = req.body;
+
+        console.log(childid,teacher_id);
 
         let query = "SELECT NOW() as time;"
         const [curr_time] = await pool.promise().query(query);
@@ -652,9 +766,12 @@ app.post('/child/attendance', async (req, res) => {
         AND ct.teacher_id = ?;
         `;
 
-            const [count] = await pool.promise().query(query, [child_id, teacher_id]);
+            const [count] = await pool.promise().query(query, [childid, teacher_id]);
 
             if (count[0].row_count !== 0) {
+
+                console.log('entered if-if');
+                
                 query = `SELECT COUNT(*) AS row_count
                 FROM Attendance
                 WHERE week_number = ?
@@ -662,19 +779,23 @@ app.post('/child/attendance', async (req, res) => {
                 AND child_id = ?;
                 `;
 
-                const [count2] = await pool.promise().query(query, [child_id, teacher_id]);
+                const [count2] = await pool.promise().query(query, [week,day,childid]);
 
                 if (count2[0].row_count === 0) {
+
+                    console.log('entered if-if-if');
+
                     query = `INSERT INTO Attendance (week_number, day_number, in_time, child_id)
                     VALUES (?,?,?,?);
                 `;
-                    await pool.promise().query(query, [week, day, currentTime, child_id]);
+                    await pool.promise().query(query, [week, day, currentTime, childid]);
+                    res.json([{ val: 1 }]);
                 } else {
-                    res.json([{ val: 2 }]);
+                    res.json([{ val: 2 }]); //already marked attendance.
                 }
 
             } else {
-                res.json([{ val: 3 }]);
+                res.json([{ val: 3 }]); // this teacher cannot give attendance.
             }
 
             //inserted. - in Time.
@@ -857,9 +978,9 @@ app.get('/child/month', async (req, res) => {
         DATE_FORMAT(in_time, '%Y-%m') AS month,
         COUNT(*) AS count
     FROM Attendance
-    WHERE teacher_id = ?
-    GROUP BY teacher_id, month
-    ORDER BY teacher_id, month;
+    WHERE child_id = ?
+    GROUP BY child_id, month
+    ORDER BY child_id, month;
     
     `;
 
@@ -880,9 +1001,9 @@ app.get('/child/week', async (req, res) => {
         week_number as week,
         COUNT(*) AS count
     FROM Attendance
-    WHERE teacher_id = ?
-    GROUP BY teacher_id, week_number
-    ORDER BY teacher_id, week_number;
+    WHERE child_id = ?
+    GROUP BY child_id, week_number
+    ORDER BY child_id, week_number;
     `;
 
         const [rows] = await pool.promise().query(query, [child_id]);

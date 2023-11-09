@@ -198,7 +198,8 @@ const Teacher = () =>{
     const handleButtonClick = (e) => {
         e.preventDefault();
         // setActiveButton(buttonName);
-    
+        
+        console.log(child_id)
     
         const markAttendance = async()=>{
             try{
@@ -233,7 +234,7 @@ const Teacher = () =>{
         }
     
         markAttendance();
-      };
+    };
 
     return(
         <div className="container">
