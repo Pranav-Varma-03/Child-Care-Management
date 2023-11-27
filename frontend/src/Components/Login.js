@@ -24,7 +24,7 @@ const Login = () => {
 
         const getData = async () => {
             try {
-                await axios.get(`http://localhost:3002/auth`, {
+                await axios.get(`/auth`, {
                     params: {
                         role: role,
                         email: emailid,
