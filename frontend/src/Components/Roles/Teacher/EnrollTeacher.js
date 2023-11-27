@@ -29,7 +29,7 @@ const EnrollTeacher = () => {
 
         const addParent = async () => {
             try {
-                axios.post(`http://localhost:3002/teacher/add`, {
+                axios.post(`/teacher/add`, {
                     email: teacheremail,
                     name: name,
                     password: password,
@@ -63,7 +63,7 @@ const EnrollTeacher = () => {
 
                 console.log("entered delete teacher");
 
-                axios.post(`http://localhost:3002/teacher/delete`, {
+                axios.post(`/teacher/delete`, {
                     email: teacheremail,
                     license: ck_license
 
@@ -95,7 +95,7 @@ const EnrollTeacher = () => {
 
                 alert("Please Confirm your Decision.");
 
-                axios.post(`http://localhost:3002/teacher/assign`, {
+                axios.post(`/teacher/assign`, {
                     class_id: classid,
                     license: ck_license,
                     teacheremail: teacheremail

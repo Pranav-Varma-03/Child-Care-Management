@@ -24,7 +24,7 @@ const FacilityAdmin = () =>{
         const fetchData = async() =>{
             try{
                 console.log("fetch fac adm")
-            await axios.get(`http://localhost:3002/facilityadmin`,{
+            await axios.get(`/facilityadmin`,{
                 params:{
                     email: ck_email,
                     facility_id: facility_id
@@ -49,7 +49,7 @@ const FacilityAdmin = () =>{
         const Date = async()=>{
             try{
 
-                axios.get(`http://localhost:3002/dayweek`,{
+                axios.get(`/dayweek`,{
                 }).then(res =>{
                     alert("Date - Set Successfully.");
                     Cookies.set('week',parseInt(res.data[0].week));

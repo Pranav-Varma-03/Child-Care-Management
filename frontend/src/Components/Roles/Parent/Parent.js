@@ -14,7 +14,7 @@ const Parent = () =>{
         const fetchData = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/parent`,{
+            await axios.get(`/parent`,{
                 params:{
                     parent_id: parent_id
                 }
@@ -30,7 +30,7 @@ const Parent = () =>{
         const childs = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/parent/children`,{
+            await axios.get(`/parent/children`,{
                 params:{
                     parent_id: parent_id
                 }

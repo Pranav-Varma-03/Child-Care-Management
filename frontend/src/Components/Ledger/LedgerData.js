@@ -27,7 +27,7 @@ const LedgerData = () =>{
         const fetchFee = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/ledger/all`,{
+            await axios.get(`/ledger/all`,{
                 params:{
                     license: ck_license
                 }
@@ -45,7 +45,7 @@ const LedgerData = () =>{
         const fetchFeeCollect = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/ledger/collect`,{
+            await axios.get(`/ledger/collect`,{
                 params:{
                     license: ck_license
                 }
@@ -116,7 +116,7 @@ const LedgerData = () =>{
 
                 // console.log(parentemail,childname,dob,consent,ck_license);
 
-                axios.post(`http://localhost:3002/ledger/confirm`,{
+                axios.post(`/ledger/confirm`,{
                    week: week,
                    child_id: child_id,
                    license: ck_license
@@ -148,7 +148,7 @@ const LedgerData = () =>{
 
                 // console.log(parentemail,childname,dob,consent,ck_license);
 
-                axios.post(`http://localhost:3002/ledger`,{
+                axios.post(`/ledger`,{
                    week: week
                 }).then(res =>{
                     

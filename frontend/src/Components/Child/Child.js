@@ -29,7 +29,7 @@ const Child = () =>{
 
         const Child = async()=>{
             try{
-                axios.post(`http://localhost:3002/child/update`,{
+                axios.post(`/child/update`,{
                     child_id: child_id,
                     name: name,
                     dob: dob,
@@ -57,7 +57,7 @@ const Child = () =>{
         const weekdata = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/child/week`,{
+            await axios.get(`/child/week`,{
                 params:{
                     child_id: child_id
                 }
@@ -76,7 +76,7 @@ const Child = () =>{
         const monthdata = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/child/month`,{
+            await axios.get(`/child/month`,{
                 params:{
                     child_id: child_id
                 }
@@ -99,7 +99,7 @@ const Child = () =>{
         const fetchData = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/child`,{
+            await axios.get(`/child`,{
                 params:{
                     child_id: child_id
                 }
@@ -119,7 +119,7 @@ const Child = () =>{
 
         const fetchPayment = async() =>{
             try{
-            await axios.get(`http://localhost:3002/payment/child`,{
+            await axios.get(`/payment/child`,{
                 params:{
                     child_id: child_id
                 }
@@ -156,7 +156,7 @@ const Child = () =>{
 
         const fetchLedger = async() =>{
             try{
-            await axios.get(`http://localhost:3002/ledger/child`,{
+            await axios.get(`/ledger/child`,{
                 params:{
                     child_id: child_id
                 }
@@ -207,7 +207,7 @@ const Child = () =>{
 
                 // console.log(parentemail,childname,dob,consent,ck_license);
 
-                axios.post(`http://localhost:3002/payment/confirm`,{
+                axios.post(`/payment/confirm`,{
                    week: week,
                    child_id: child_id
                 }).then(res =>{

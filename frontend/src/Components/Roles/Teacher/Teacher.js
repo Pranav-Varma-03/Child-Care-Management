@@ -34,7 +34,7 @@ const Teacher = () =>{
         const Date = async()=>{
             try{
 
-                axios.get(`http://localhost:3002/dayweek`,{
+                axios.get(`/dayweek`,{
                 }).then(res =>{
                     // alert("Date - Set Successfully.");
                     Cookies.set('week',parseInt(res.data[0].week));
@@ -52,7 +52,7 @@ const Teacher = () =>{
         const fetchData = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/teacher`,{
+            await axios.get(`/teacher`,{
                 params:{
                     teacher_id: teacher_id
                 }
@@ -70,7 +70,7 @@ const Teacher = () =>{
         const fetchAttendance = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/attendance/teacher`,{
+            await axios.get(`/attendance/teacher`,{
                 params:{
                     license: ck_license,
                     teacher_id: teacher_id,
@@ -111,7 +111,7 @@ const Teacher = () =>{
         const fetchSalary = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/salary/teacher`,{
+            await axios.get(`/salary/teacher`,{
                 params:{
                     license: ck_license,
                     teacher_id: teacher_id,
@@ -150,7 +150,7 @@ const Teacher = () =>{
         const fetchhrs = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/hours/teacher`,{
+            await axios.get(`/hours/teacher`,{
                 params:{
                     license: ck_license,
                     teacher_id: teacher_id,
@@ -208,7 +208,7 @@ const Teacher = () =>{
     
                 // console.log(parentemail,childname,dob,consent,ck_license);
                 console.log({activeButton}.activeButton)
-                axios.post(`http://localhost:3002/child/attendance`,{
+                axios.post(`/child/attendance`,{
                     time: {activeButton},
                     childid: child_id,
                     week: ck_week,

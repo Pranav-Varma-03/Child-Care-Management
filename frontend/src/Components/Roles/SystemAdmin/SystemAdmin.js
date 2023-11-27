@@ -24,7 +24,7 @@ const SystemAdmin = () => {
         const addF = async () => {
             try {
 
-                axios.post(`http://localhost:3002/facility/add`, {
+                axios.post(`/facility/add`, {
                     Fname: Fname,
                     addr: addr,
                     license: license
@@ -55,7 +55,7 @@ const SystemAdmin = () => {
         const addFA = async () => {
             try {
 
-                axios.post(`http://localhost:3002/facilityadmin/add`, {
+                axios.post(`/facilityadmin/add`, {
                     FAname: FAname,
                     email: email,
                     password: password,

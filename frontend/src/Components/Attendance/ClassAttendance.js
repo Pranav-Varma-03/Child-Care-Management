@@ -25,7 +25,7 @@ const ClassAttendance = () =>{
         const fetchPresent = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/attendance/present`,{
+            await axios.get(`/attendance/present`,{
                 params:{
                     license: ck_license,
                     class_id: class_id,
@@ -64,7 +64,7 @@ const ClassAttendance = () =>{
         const fetchAbsent = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/attendance/absent`,{
+            await axios.get(`/attendance/absent`,{
                 params:{
                     license: ck_license,
                     class_id: class_id,

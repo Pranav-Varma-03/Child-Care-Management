@@ -36,7 +36,7 @@ const EnrollChild = () => {
         const fetchClass = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/classroom/all`,{
+            await axios.get(`/classroom/all`,{
                 params:{
                     license: ck_license
                 }
@@ -74,7 +74,7 @@ const EnrollChild = () => {
         const fetchChild = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/children/all`,{
+            await axios.get(`/children/all`,{
                 params:{
                     license: ck_license
                 }
@@ -117,7 +117,7 @@ const EnrollChild = () => {
 
         const addParent = async () => {
             try {
-                axios.post(`http://localhost:3002/parent/add`, {
+                axios.post(`/parent/add`, {
                     email: parentemail,
                     name: parentname,
                     password: password,
@@ -150,7 +150,7 @@ const EnrollChild = () => {
 
                 alert("Please Confirm your Decision.");
 
-                axios.post(`http://localhost:3002/child/assign`, {
+                axios.post(`/child/assign`, {
                     class_id: classid,
                     license: ck_license,
                     child_id: childid
@@ -182,7 +182,7 @@ const EnrollChild = () => {
                 
                 console.log(parentemail, childname, dob, consent, ck_license);
 
-                axios.post(`http://localhost:3002/child/add`, {
+                axios.post(`/child/add`, {
                     parentemail: parentemail,
                     name: childname,
                     dob: dob,
@@ -215,7 +215,7 @@ const EnrollChild = () => {
 
                 // console.log(parentemail,childname,dob,consent,ck_license);
 
-                axios.post(`http://localhost:3002/add/classroom`, {
+                axios.post(`/add/classroom`, {
                     type: type,
                     license:ck_license
 
@@ -246,7 +246,7 @@ const EnrollChild = () => {
 
                 alert("Please Confirm your Decision.");
 
-                axios.post(`http://localhost:3002/child/delete`, {
+                axios.post(`/child/delete`, {
                     childid: childid
 
                 }).then(res => {

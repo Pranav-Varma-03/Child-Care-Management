@@ -18,7 +18,7 @@ const Reports = () =>{
         const allClasses = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/allclasses`,{
+            await axios.get(`/allclasses`,{
                 params:{
                     license: ck_license
                 }
@@ -60,7 +60,7 @@ const Reports = () =>{
         const TotalEarned = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/earned`,{
+            await axios.get(`/earned`,{
                 params:{
                     license: ck_license,
                     week: ck_week
@@ -86,7 +86,7 @@ const Reports = () =>{
         const TotalBilled = async() =>{
             try{
     
-            await axios.get(`http://localhost:3002/billed`,{
+            await axios.get(`/billed`,{
                 params:{
                     license: ck_license,
                     week: ck_week

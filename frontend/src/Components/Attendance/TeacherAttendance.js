@@ -24,7 +24,7 @@ const TeacherAttendance = () =>{
 
             // console.log(parentemail,childname,dob,consent,ck_license);
             console.log({activeButton}.activeButton)
-            axios.post(`http://localhost:3002/teacher/attendance`,{
+            axios.post(`/teacher/attendance`,{
                 time: {activeButton},
                 email: teacheremail,
                 week: ck_week,
