@@ -12,9 +12,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 const pool = mysql.createPool({
-    host: "127.0.0.1",
-    user: "cms_user",
-    password: "test@323",
+    host: "cms.ckwrnn66ptl4.ap-southeast-2.rds.amazonaws.com",
+    user: "admin",
+    password: "password",
     database: "CMS",
     connectionLimit: 10
 });

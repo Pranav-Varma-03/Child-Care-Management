@@ -178,6 +178,8 @@ const EnrollChild = () => {
         const addChild = async () => {
             try {
 
+                console.log(type);
+                
                 console.log(parentemail, childname, dob, consent, ck_license);
 
                 axios.post(`http://localhost:3002/child/add`, {
@@ -327,16 +329,17 @@ const EnrollChild = () => {
                                     <label htmlFor="textarea1">Allergies</label>
                                 </div>
                                 <div className="dropdown-container">
-                                    <ul id="dropdown2" className="dropdown-content">
-                                        <li><a id="infant" onClick={(e) => { setType(e.target.id) }}>infant</a></li>
-                                        <li><a id="toddler" onClick={(e) => { setType(e.target.id) }}>toddler</a></li>
-                                        <li><a id="twalder" onClick={(e) => { setType(e.target.id) }}>twalder</a></li>
-                                        <li><a id="3 years old" onClick={(e) => { setType(e.target.id) }}>3 years old</a></li>
-                                        <li><a id="4 years old" onClick={(e) => { setType(e.target.id) }}>4 years old</a></li>
-                                    </ul>
-                                </div>
-                                <a className="btn dropdown-trigger" href="#!" data-target="dropdown2">{type}</a>
+                 
+                    <ul id='dropdown1' className='dropdown-content'>
+                        <li><a id="infant" onClick={(e) => { setType(e.target.id) }}>infant</a></li>
+                        <li><a id="toddler" onClick={(e) => { setType(e.target.id) }}>toddler</a></li>
+                        <li><a id="twalder" onClick={(e) => { setType(e.target.id) }}>twalder</a></li>
+                        <li><a id="3 years old" onClick={(e) => { setType(e.target.id) }}>3 years old</a></li>
+                        <li><a id="4 years old" onClick={(e) => { setType(e.target.id) }}>4 years old</a></li>
+                    </ul>
+                    <a className="btn dropdown-trigger" href="#!" data-target="dropdown1">{type}</a>
 
+                    </div>
                                 <div className="input-field col s12">
                                     <p>
                                         <label>
