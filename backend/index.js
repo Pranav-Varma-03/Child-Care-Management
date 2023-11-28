@@ -158,7 +158,7 @@ app.post('/parent/add', async (req, res) => {
 
 app.post('/child/add', async (req, res) => {
     try {
-        const { parentemail, name, dob, allergies, consent, license } = req.body;
+        const { parentemail, name, dob, allergies, consent, license,type } = req.body;
 
 
         let query = 'SELECT parent_id FROM Parent WHERE email = ? ;';
@@ -168,9 +168,9 @@ app.post('/child/add', async (req, res) => {
         console.log(parent_id);
 
         if (parent_id != null && parent_id.length !== 0) {
-            query = `INSERT INTO Child (name, dob, allergies, parent_id,consent_Form,license_number) VALUES (?, ?, ?, ?, ?,?);`;
+            query = `INSERT INTO Child (name, dob, allergies, parent_id,consent_Form,license_number,type) VALUES (?, ?, ?, ?, ?,?,?);`;
 
-            const [rows] = await pool.promise().query(query, [name, dob, allergies, parent_id[0].parent_id, consent, license]);
+            const [rows] = await pool.promise().query(query, [name, dob, allergies, parent_id[0].parent_id, consent, license,type]);
             // console.log(rows[0]);
             res.json([{ val: 1 }]);
         } else {
@@ -427,11 +427,11 @@ app.get('/children/all', async (req, res) => {
 
 app.post('/ledger', async (req, res) => {
     try {
-        const { week } = req.body
+        const { week,license } = req.body
 
-        let query = `SELECT COUNT(*) as count FROM Ledger WHERE week_number = ?`;
+        let query = `SELECT COUNT(*) as count FROM Ledger WHERE week_number = ? AND license_number = ?`;
 
-        const [rows] = await pool.promise().query(query, [week]);
+        const [rows] = await pool.promise().query(query, [week,license]);
 
         if (rows[0].count == 0) {
             //add Data.

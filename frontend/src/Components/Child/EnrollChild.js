@@ -188,7 +188,8 @@ const EnrollChild = () => {
                     dob: dob,
                     allergies: allergies,
                     consent: consent,
-                    license: ck_license
+                    license: ck_license,
+                    type:type
                 }).then(res => {
 
                     if (res.data[0].val === 1) {

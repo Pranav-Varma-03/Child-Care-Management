@@ -43,6 +43,12 @@ const FacilityAdmin = () =>{
         fetchData();
     },[])
 
+    const handlelicense = (e) =>{
+        e.preventDefault();
+
+        setlicense(data[0].license_number);
+    }
+
     const handleDate = (e) => {
         e.preventDefault();
 

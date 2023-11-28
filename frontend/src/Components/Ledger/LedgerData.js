@@ -149,7 +149,8 @@ const LedgerData = () =>{
                 // console.log(parentemail,childname,dob,consent,ck_license);
 
                 axios.post(`/ledger`,{
-                   week: week
+                   week: week,
+                   license: ck_license
                 }).then(res =>{
                     
                     if(res.data[0].val === 1){
