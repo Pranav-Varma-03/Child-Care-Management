@@ -407,3 +407,18 @@ VALUES
 ('twadler', 250),
 ('3 years old', 225),
 ('4 years old', 200);
+
+UPDATE Child
+SET type = 
+    CASE
+        WHEN type = 'Toddler' THEN 'toddler'
+        WHEN type = 'Twaddler' THEN 'twaddler'
+        WHEN type = '3 Years Old' THEN '3 years old'
+        WHEN type = '4 Years Old' THEN '4 years old'
+        ELSE type
+    END
+WHERE type IN ('Toddler', 'Twaddler', '3 Years Old', '4 Years Old');
+
+UPDATE FacilityAdmin
+SET license_number = facility_id
+WHERE license_number IS NULL;
